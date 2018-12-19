@@ -1,0 +1,21 @@
+.clearfix {
+    margin-bottom: 20px;
+}
+
+.highlighted_row {
+    background-color: #F9E0A7;
+}
+
+.details_arrow {
+    position: relative;
+    top: 6px;
+}
+
+.full_star {
+    color: #F8D33A;
+}
+
+.progress_div {
+    position: relative;
+    top: 100px;
+}

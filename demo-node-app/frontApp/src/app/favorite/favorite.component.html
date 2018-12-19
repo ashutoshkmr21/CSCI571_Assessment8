@@ -1,0 +1,49 @@
+<div class="clearfix"></div>
+<div class="container d-flex justify-content-center">
+    <button type="button" [ngClass]="{'btn-light': !isActiveResButton, 'btn-primary': isActiveResButton }" class="btn result_button" (click)="showResults(isActiveResButton)">Results</button>
+    <button type="button" [ngClass]="{'btn-light': !isActiveFavButton, 'btn-primary': isActiveFavButton}" class="btn btn-light" (click)="showFavorites(isActiveFavButton)">Favorites</button>
+</div>
+
+<div class="container" *ngIf="showFavoriteList">
+    <div class="container d-flex flex-row-reverse" *ngIf="showEventsDetails"><button class="btn btn-light p-6" [disabled]="isDetailsEnabled" (click)="saveDetailsState()">Details<i class="material-icons">
+        keyboard_arrow_right
+        </i></button></div>
+    <!-- <ng-container *ngIf="isFavorites; then eventDetailsJson; else noRecords"></ng-container>
+    <ng-template #eventDetails> -->
+      <div class="container" *ngIf="showEventsDetails">
+        <div>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Date</th>
+                <th scope="col">Event</th>
+                <th scope="col">Category</th>
+                <th scope="col">Venue Info</th>
+                <th scope="col">Favorite</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of eventDetailsJson; index as ind">
+                <th scope="row">{{ind+1}}</th>
+                <td>{{row.localDate}}</td>
+                <td (click)="showSpecificEventDetails(row.id, row)" ><div *ngIf="row.name.length > 30"><a matTooltip="{{row.name}}" href="javascript:">{{row.shortName}}</a></div>
+                  <div *ngIf="row.name.length<=30"><a href="javascript:">{{row.shortName}}</a></div></td>
+                <td>{{row.genre}}</td>
+                <td>{{row.venueInfo}}</td>
+                <td> <i class="material-icons" (click)="deleteFavorite(row)">delete</i></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <!-- </ng-template> -->
+    <!-- <ng-template #noRecords> -->
+
+      <div class="clearfix"></div>
+
+        <div *ngIf="!isFavorites" class="container alert alert-warning" role="alert">
+            No Records Found!
+          </div>
+    <!-- </ng-template> -->
+    </div>

@@ -1,0 +1,255 @@
+<div class="container"  *ngIf="showDetailedPage">
+    <div class="row">
+    <div class="col-md-10"><button class="btn btn-light" (click)="goBack(isFavorite)"><i class="material-icons list_arrow">
+        keyboard_arrow_left
+        </i>List</button></div>
+    <div class="d-flex flex-row-reverse twitter_button">
+            <a class="twitter-share-button"
+            href={{event_tab_json.tweetUrl}} target="_blank">
+          <img src="http://csci571.com/hw/hw8/Images/Twitter.png" id="twitter_img"></a>
+    </div>
+    <div class="d-flex flex-row-reverse fav_star">
+            <i class="material-icons border highlight_star" (click)="deleteFavorite()" *ngIf="isFavoriteSelected"> star </i>
+            <i class="material-icons border" (click)="markFavorite()" *ngIf="!isFavoriteSelected"> star_border </i>
+    </div>
+    </div>
+    <div class="title d-flex justify-content-center"><h5>{{event_tab_json.event_name}}</h5></div>
+</div>
+<div class="container" *ngIf="showDetailedPage">
+  <div style="float: right;">
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="javascript:" (click)="getEventDetails()">Event</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="javascript:" (click)="manipulateDataArtistsOrTeams()">Artist/Teams</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="javascript:" (click)="getVenueDetailsTab(venue)">Venue</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="javascript:" (click)="manipulateUpcomingEventsData()">Upcoming Events</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div class="progress container" *ngIf="showProgressBar">
+    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="container" *ngIf="!show_no_records_msg && !showProgressBar && showDetailedPage" >
+    <div class="event_tab" *ngIf="showEventTab">
+        <table class="table table-striped">
+            <tbody>
+                <tr *ngIf="event_tab_json.artist_team">
+                <th scope="row">Artist/Team(s)</th>
+                <td>{{event_tab_json.artist_team}}</td>
+                </tr>
+                <tr *ngIf="event_tab_json.venue">
+                    <th scope="row">Venue</th>
+                    <td>{{event_tab_json.venue}}</td>
+                </tr>
+                <tr *ngIf="event_tab_json.date">
+                    <th scope="row">Time</th>
+                    <td>{{event_tab_json.date}}</td>
+                </tr>
+                <tr *ngIf="event_tab_json.category">
+                    <th scope="row">Category</th>
+                    <td>{{event_tab_json.category}}</td>
+                </tr>
+                <tr *ngIf="event_tab_json.priceRange">
+                    <th scope="row">Price Range</th>
+                    <td>{{event_tab_json.priceRange}}</td>
+                </tr>
+                <tr *ngIf="event_tab_json.ticketStatus">
+                    <th scope="row">Ticket Status</th>
+                    <td>{{event_tab_json.ticketStatus}}</td>
+                </tr>
+                <tr *ngIf="event_tab_json.buyTicketAt">
+                    <th scope="row">Buy Ticket At</th>
+                    <td><a href="{{event_tab_json.buyTicketAt}}" target='_blank'>TicketMaster</a></td>
+                </tr>
+                <tr *ngIf="event_tab_json.seatMap">
+                    <th scope="row">Seat Map</th>
+                    <td>
+                        <!-- <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal">View Map Here</button> -->
+                        <!-- <a  target="_blank" >View Map Here</a> -->
+                        
+                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal">
+                                View Map Here
+                            </button>
+                        <div class="modal" id="myModal">
+                                <div class="modal-dialog">
+                                <div class="modal-content">
+                                
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                    <h4 class="modal-title">View Seat Map</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                    <a href="{{event_tab_json.seatMap}}" target="_blank"><img id="seatmap_modal" src="{{event_tab_json.seatMap}}"></a>
+                                    </div>
+                                    
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                                    </div>
+                                    
+                                </div>
+                                </div>
+                            </div>
+
+                    </td>
+                </tr>
+            </tbody>
+            </table>
+            <!-- href="{{seatMap}}" -->
+
+            
+
+    </div>
+    <div class="artist_tab" *ngIf="showArtistsTab">
+        <div class="content">
+            <div *ngFor="let data of manpData">
+                <div class="clearfix"></div>
+                <div class="title d-flex justify-content-center"><h5>{{data.name}}</h5></div>
+                <table class="table table-striped" *ngIf="isArtist">
+                    <tbody>
+                        <tr *ngIf="data.name">
+                            <th scope="row">Name</th>
+                            <td>{{data.name}}</td> 
+                        </tr>
+                        <tr *ngIf="data.follower">
+                            <th scope="row">Followers</th>
+                            <td>{{data.follower.toLocaleString()}}</td> 
+                        </tr>
+                        <tr *ngIf="data.popularity">
+                            <th scope="row">Popularity</th>
+                            <td>
+                                <round-progress [current]="data.popularity" [radius]="25" [stroke]="6"  [max]="100" ></round-progress>
+                                <div class="popularity">{{data.popularity}}</div>
+                            </td> 
+                        </tr>
+                        <tr *ngIf="data.checkAt">
+                            <th scope="row">Check At</th>
+                            <td><a href="{{data.checkAt}}" target="_blank">Spotify</a></td> 
+                        </tr>
+                    </tbody>         
+                </table>
+                <div class="google_images">
+                <div class="container artist_img_box" *ngFor="let dat of data.links.split('#####')">
+                    <a href="{{dat}}" target="_blank"><img class="artist_img_gog" src="{{dat}}"></a>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="venue_tab" *ngIf="showVenueTab">
+            <div class="title d-flex justify-content-center" ><h5>{{venue_tab_json.venue}}</h5></div>
+        <table class="table table-striped">
+        <tbody>
+            <tr *ngIf="venueAddress">
+            <th scope="row">Address</th>
+            <td>{{venue_tab_json.venueAddress}}</td>
+            </tr>
+            <tr *ngIf="venueCity">
+                <th scope="row" >City</th>
+                <td>{{venue_tab_json.venueCity}}</td>
+            </tr>
+            <tr *ngIf="venuePhNo">
+                <th scope="row">Phone Number</th>
+                <td>{{venue_tab_json.venuePhNo}}</td>
+            </tr>
+            <tr *ngIf="venueOpenHours">
+                <th scope="row">Open Hours</th>
+                <td>{{venue_tab_json.venueOpenHours}}</td>
+            </tr>
+            <tr *ngIf="venueGeneralRule">
+                <th scope="row">General Rule</th>
+                <td>{{venue_tab_json.venueGeneralRule}}</td>
+            </tr>
+            <tr *ngIf="venueChildRule">
+                <th scope="row" >Child Rule</th>
+                <td>{{venue_tab_json.venueChildRule}}</td>
+            </tr>
+        </tbody>
+
+        </table>
+        <!-- <div #gmap class="container" style="height:400px"></div> -->
+        
+        <div class="google_map_venue" *ngIf="venue_tab_json.lat">
+            <agm-map [latitude]="venue_tab_json.lat" [longitude]="venue_tab_json.lng" [zoom]="venue_tab_json.zoom">
+                <agm-marker [latitude]="venue_tab_json.lat" [longitude]="venue_tab_json.lng"></agm-marker>
+                <!-- <agm-circle [latitude]="lat + 0.3" [longitude]="lng" 
+                    [radius]="1000"
+                    [fillColor]="'red'"
+                    [circleDraggable]="true"
+                    [editable]="true">
+                </agm-circle> -->
+            </agm-map>
+        </div>
+        <div *ngIf="!venue_tab_json.lat" class="container alert alert-warning col-sm-8" role="alert">
+            Unable to load Map!
+    </div>
+
+    </div>
+    <div class="upcomingEvents_tab" *ngIf="showUpcomingEventsTab">
+        
+        <div class="row">
+            <!-- <div *ngFor="let data of upcomingEventData" class="row"> -->
+            <div class="col-sm-4">
+                <select class="form-control" name="sort_type" id="sort_type" [(ngModel)]="sort_type" (change)="sortOnType($event.target.value)">
+                    <option value="default" selected>Default</option>
+                    <option value="name">Event Name</option>
+                    <option value="dateString">Time</option>
+                    <option value="artistName">Artist</option>
+                    <option value="type">Type</option>
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <select class="form-control" name="sort_order" [(ngModel)]="sort_order" id="sort_order" (change)="sortOnType($event.target.value)">
+                    <option value="ascending" selected>Ascending</option>
+                    <option value="descending">Descending</option>
+                </select>
+            </div>
+            <div class="clearfix"></div>
+            <div class="container" >
+            <div class="card cards_upcoming_info w-100" *ngFor="let data of upcomingEventData|slice:0:show_upcoming_events let i=index">
+                <div class="card-body">
+                    <h5 class="card-title"><a href="{{data.url}}" target="_blank">{{data.name}}</a></h5>
+                    <p class="card-text"><label class="artist_info">Artist: </label><label class="artist_info">{{data.artistName}}</label><label>{{data.dateString}}</label></p>
+                    <p class="card-text"><label>Type: </label><label>{{data.type}}</label></p>
+                </div>
+                
+            </div>
+            <div class="row justify-content-center">
+                <button class="col-sm-2 btn btn-primary"  (click)="showMoreLess(showBtnVal)">{{showBtnVal}}</button>
+                <!-- <button class="col-sm-2 btn btn-primary" *ngIf="i==show_upcoming_events-1 && show_upcoming_events == upcomingEventData.length" (click)="setLessCount()">Less</button> -->
+                </div>
+            <!-- <button class="btn btn-primary" (click)="showMoreLess()">More</button> -->
+            </div>
+                <!-- <p><a href="{{data.url}}">{{data.name}}</a></p><br>
+                <div><label>Artist: </label><label>{{data.artistName}}</label><label>{{data.dateString}}</label></div>
+                <br><div><label>Type: </label><label>{{data.type}}</label></div><br><br> -->
+            <!-- </div> -->
+
+            <!-- <div ng-repeat="data in upcomingEventData | orderBy: 'name'" class="row">
+                    <p><a href="{{data.url}}">{{data.name}}</a></p><br>
+                    <div><label>Artist: </label><label>{{data.artistName}}</label><label>{{data.dateString}}</label></div>
+                    <br><div><label>Type: </label><label>{{data.type}}</label></div><br><br>
+                </div> -->
+        </div>
+
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<div *ngIf="show_no_records_msg" class="container alert alert-warning col-sm-8" role="alert">
+        No Records Found!
+</div>
+
+

@@ -1,0 +1,27 @@
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+#event_searchbox {
+    background-color: #f7f7f7;
+}
+
+.clear_button {
+    background-color: white;
+}
+
+.search_container {
+    /* width: 60%; */
+    margin-top: 10px;
+}
+
+.has-error, .text-danger, .is-invalid, .asterisk {
+    color: red;
+}
+
+.search_icon, .clear_icon {
+    position: relative;
+    top: 7px;
+}
+
+
+/* button {
+    background-color: blue;
+} */

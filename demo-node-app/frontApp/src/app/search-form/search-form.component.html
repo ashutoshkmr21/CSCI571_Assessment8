@@ -1,0 +1,161 @@
+<div class="container border rounded search_container" id="event_searchbox" ng-app="searchform_app" ng-controller="SearchFormComponent">
+	<!-- <form (ngSubmit) = "getEventsDet(searchKeywordForm)" #searchKeywordForm="ngForm">
+		<input type="hidden" name="latitude" id="latitude" [(ngModel)]="latitude" >
+		<input type="hidden" name="longitude" id="longitude" [(ngModel)]="longitude" >
+		<div class="form-group row" [class.has-error]="searchKeywordControl.invalid && searchKeywordControl.touched"
+		[class.has-success]="searchKeywordControl.valid">
+			<label for="searchKeyword" class="control-label col-sm-2 col-form-label">Keyword:</label>
+			<div class="col-sm-6">
+				<input type="text" (keydown)="getAutoSuggest($event)" name="searchKeyword" class="form-control" id="keyword" required="" 
+				[(ngModel)]="search_keyword" #searchKeywordControl="ngModel" >
+				<span class="help-block" *ngIf="searchKeywordControl.invalid && searchKeywordControl.touched">
+					Keyword is required.</span>
+			</div>	
+		</div>
+		<div class="form-group row">
+			<label for="categories list" class="col-sm-2 col-form-label">Category</label>
+			<div class="col-sm-4">
+				<select class="form-control" name="categoriesList" id="categories_list" 
+				[(ngModel)]="categories_list">
+					<option value="" selected>All</option>
+					<option value="KZFzniwnSyZfZ7v7nJ">Music</option>
+					<option value="KZFzniwnSyZfZ7v7nE">Sports</option>
+					<option value="KZFzniwnSyZfZ7v7na">Art & Theatre</option>
+					<option value="KZFzniwnSyZfZ7v7nn">Film</option>
+					<option value="KZFzniwnSyZfZ7v7n1">Miscellaneous</option>
+				</select>
+			</div>	
+  		</div>
+  		<div class="form-group row">
+			<label for="distance" class="col-sm-2 col-form-label">Distance:</label>
+			<div class="col-sm-4">
+				<input type="text" name="distance_" class="form-control" id="distance_miles" 
+				[(ngModel)]="distance_miles">
+			</div>
+			<div class="col-sm-4">
+				<select class="form-control" name="distanceUnit" id="distance_unit" 
+				[(ngModel)]="distance_unit">
+					<option value="miles" selected>miles</option>
+					<option value="km">Kilometers</option>
+				</select>
+			</div>		
+  		</div>
+  		<div class="form-group col-sm-4 row">
+  			<label for="from_loc" class="col-sm-4 col-form-label">From:</label>
+  			<div class="form-check">
+				<input class="form-check-input" type="radio" name="fromLocation" id="here_loc" 
+				  value="here" checked [(ngModel)]="from_location">
+  				<label class="form-check-label" for="here location">Current Location</label>				
+  			</div>
+  			<div class="form-check">
+				  <input class="form-check-input" type="radio" name="fromLocation" id="custom_loc" 
+				  value="custom_loc" [(ngModel)]="from_location">
+				  <label class="form-check-label" for="other location">Other, Please specify</label>
+				  <input type="text" value="" name="customLocation" id="custom_loc" class="form-control" 
+				  [(ngModel)]="custom_location">			
+  			</div>
+  		</div>
+  		<div class="col-auto">
+      		<button type="submit" class="btn btn-primary mb-2" [disabled]="searchKeywordForm.invalid">Search</button>
+    	</div>
+    	<div class="col-auto">
+      		<button type="reset" class="btn btn-primary mb-2">Reset</button>
+    	</div>
+	</form>
+
+	<div class="container">
+		<button type="button" class="btn btn-primary">Results</button>
+		<button type="button" class="btn btn-primary">Favorites</button>
+	</div> -->
+
+
+
+
+	<div class="row d-flex justify-content-center"><h5>Entertainment Event Ticket Search</h5></div>
+
+	<form (ngSubmit) = "getEventsDet(searchKeywordForm)" [formGroup]="searchKeywordForm">
+			<input type="hidden" name="latitude" id="latitude"  formControlName="latitude" >
+			<input type="hidden" name="longitude" id="longitude" formControlName="longitude">
+			<div class="form-group row panel-body offset-1"  >
+				<label for="searchKeyword" class="control-label col-sm-3 col-form-label">Keyword<span class="asterisk">*</span></label>
+				<div class="col-sm-6 panel-body" [ngClass]="{'is-invalid': searchKeywordForm.get('search_keyword').errors && (searchKeywordForm.get('search_keyword').touched || searchKeywordForm.get('search_keyword').dirty)}">
+					<!-- <mat-form-field> -->
+						<input type="text" (keydown)="getAutoSuggest($event)" matInput name="search_keyword" class="form-control" id="search_keyword" 
+						formControlName="search_keyword" [matAutocomplete]="auto"  
+						placeholder="Event Artist, Team or Event Name (eg. Lakers)"
+						[ngClass]="{'is-invalid': searchKeywordForm.get('search_keyword').errors && (searchKeywordForm.get('search_keyword').touched || searchKeywordForm.get('search_keyword').dirty)}">
+					 <!-- </mat-form-field> -->
+					 <span class="help-block" *ngIf="searchKeywordForm.get('search_keyword').errors && searchKeywordForm.get('search_keyword').touched">
+					 <span *ngIf="searchKeywordForm.get('search_keyword').errors.required">Please enter a keyword</span>
+					 <span *ngIf="searchKeywordForm.get('search_keyword').errors.pattern">Please enter valid key</span>
+					 </span>
+					 <mat-autocomplete #auto="matAutocomplete">
+							<mat-option *ngFor="let option of autoSuggestResp" [value]="option">{{option}}</mat-option>
+					 </mat-autocomplete>
+				</div>	
+			</div>
+			<div class="form-group row offset-1">
+				<label for="categories list" class="col-sm-3 col-form-label">Category</label>
+				<div class="col-sm-4">
+					<select class="form-control" name="categories_list" id="categories_list" 
+					 formControlName="categories_list">
+						<option value="" selected>All</option>
+						<option value="KZFzniwnSyZfZ7v7nJ">Music</option>
+						<option value="KZFzniwnSyZfZ7v7nE">Sports</option>
+						<option value="KZFzniwnSyZfZ7v7na">Art & Theatre</option>
+						<option value="KZFzniwnSyZfZ7v7nn">Film</option>
+						<option value="KZFzniwnSyZfZ7v7n1">Miscellaneous</option>
+					</select>
+				</div>	
+			  </div>
+			  <div class="form-group row offset-1">
+				<label for="distance" class="col-sm-3 col-form-label">Distance</label>
+				<div class="col-sm-3">
+					<input type="text" name="distance_miles" class="form-control" id="distance_miles" 
+					 formControlName="distance_miles" value="10">
+				</div>
+				<div class="col-sm-3">
+					<select class="form-control" name="distance_unit" id="distance_unit" 
+					 formControlName="distance_unit">
+						<option value="miles" selected>miles</option>
+						<option value="km">Kilometers</option>
+					</select>
+				</div>		
+			  </div>
+			  <div class="form-group row offset-1">
+				  <label for="from_loc" class="col-sm-3 col-form-label">From<span class="asterisk">*</span></label>
+				  <div class="form-check col-sm-9">
+					<input class="form-check-input" type="radio" name="from_location" id="here_loc" 
+					  value="here" checked  formControlName="from_location" (click)="location_preference('here')">
+					  <label class="form-check-label" for="here location">Current Location</label>				
+				  </div>
+				  <div class="form-check col-sm-9 offset-3">
+					  <input class="form-check-input" type="radio" name="from_location" id="custom_loc" 
+					  value="custom_loc"  formControlName="from_location" (click)="location_preference('custom_loc')" >
+					  <label class="form-check-label" for="other location">Other, Please specify</label>		
+				  </div>
+				  <div class="form-group col-md-6 offset-3" [ngClass]="{'is-invalid': searchKeywordForm.get('custom_location').errors && (searchKeywordForm.get('custom_location').touched || searchKeywordForm.get('custom_location').dirty)}">
+					<input type="text" value="" [required]="custom_loc_required" name="custom_location" id="custom_loc" class="form-control col-sm-6" 
+					formControlName="custom_location"
+					[ngClass]="{'is-invalid': searchKeywordForm.get('custom_location').errors && (searchKeywordForm.get('custom_location').touched || searchKeywordForm.get('custom_location').dirty)}">
+					<span class="help-block" *ngIf="searchKeywordForm.get('custom_location').errors && searchKeywordForm.get('custom_location').touched">
+						<span *ngIf="searchKeywordForm.get('search_keyword').errors.required">Please enter a location</span>
+						<span *ngIf="searchKeywordForm.get('search_keyword').errors.pattern">Please enter valid location</span>
+						</span>
+				</div>
+			  </div>
+			<div class="row offset-1">  
+				<div class="col-auto">
+				  <button type="submit" class="btn btn-primary" [disabled]="searchKeywordForm.invalid" > <i class="material-icons search_icon">
+					search
+					</i> Search</button>
+				</div>
+				<div class="col-auto">
+				  <button type="button" class="btn btn-light clear_button" (click)="resetForm()"><i class="material-icons clear_icon">
+					clear_all
+					</i> Clear</button>
+				</div>
+			</div>
+		</form>	
+</div>
+<!-- {{searchKeywordForm.value | json }} -->
